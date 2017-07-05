@@ -1,4 +1,4 @@
-require_relative 'JSONable'
+require_relative 'jsonable'
 require_relative 'label'
 
 class Book < JSONable

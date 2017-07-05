@@ -6,11 +6,8 @@ RUN apt install build-essential \
 				curl \
 				wget -y
 
-# RUN gem install rails
-# RUN gem install sinatra
-# RUN gem install json
 RUN gem install bundle
-
+RUN bundle install
 
 #Finish
 WORKDIR /home
