@@ -7,7 +7,6 @@ RUN apt install build-essential \
 				wget -y
 
 RUN gem install bundle
-RUN bundle install
 
 #Finish
 WORKDIR /home
