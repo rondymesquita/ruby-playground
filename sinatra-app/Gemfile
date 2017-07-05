@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+source "https://rubygems.org"
+
+# gem "rails"
+
+# Added at 2017-07-05 12:59:43 +0000 by root:
+gem "sinatra", "~> 2.0"
+
+# Added at 2017-07-05 13:00:01 +0000 by root:
+gem "json", "~> 2.1"
+
+# Added at 2017-07-05 16:02:14 +0000 by root:
+gem "sinatra-contrib", "~> 2.0"
