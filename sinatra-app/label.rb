@@ -7,9 +7,4 @@ class Label < JSONable
     @name = name
   end
 
-  # def to_json
-  #   hash = Hash.new
-  #   hash = {:name => @name}
-  #   hash
-  # end
 end

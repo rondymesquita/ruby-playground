@@ -15,6 +15,6 @@ get '/' do
   labelProgramming = Label.new("Programming")
   labelTechnology = Label.new("Technology")
   labels = [labelProgramming, labelTechnology]
-  rubyBook = Book.new("Ruby", 2016, true, ["a","s"])
+  rubyBook = Book.new("Ruby", 2016, true, labels)
   json rubyBook.to_json
 end
