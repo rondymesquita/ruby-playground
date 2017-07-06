@@ -1,5 +1,5 @@
-require_relative 'book'
-require_relative 'parser'
+require_relative '../models/book'
+require_relative '../helpers/parser'
 
 class BookService
   def list
@@ -8,7 +8,6 @@ class BookService
     label_js = Label.new('Javascript')
 
     book_ruby = Book.new('Ruby', 2016, true, [label_programming, label_ruby])
-
     book_js = Book.new('Javascript', 2016, false, [label_js])
 
     books = [book_ruby, book_js]
@@ -21,6 +20,7 @@ class BookService
     label_programming = Label.new('Programming')
     label_ruby = Label.new('Ruby')
     book_ruby = Book.new('Ruby', 2016, true, [label_programming, label_ruby])
+
 
     parser = HashParser.new
     books = parser.parse_one book_ruby

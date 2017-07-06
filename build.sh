@@ -1,8 +1,18 @@
-#! /bin/bash
+#!/bin/bash
 IMAGE_NAME="ruby-playground"
+clear
 
 hello(){
-  echo "*** $IMAGE_NAME"
+  # echo "*** $IMAGE_NAME"
+  print "$IMAGE_NAME"
+  print "Hello"
+}
+
+print(){
+  OUTPUT=$(printf "%-20s" $1)
+  OUTPUT2="$OUTPUT"
+  OUTPUT3="$OUTPUT2" | tr ' ' '-'
+  echo "** $OUTPUT2 **"
 }
 
 build(){

@@ -1,5 +1,5 @@
 require 'json'
-require_relative 'parser'
+require_relative '../helpers/parser'
 
 class JSONable
   def to_json
