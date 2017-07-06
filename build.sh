@@ -1,27 +1,54 @@
 #! /bin/bash
 IMAGE_NAME="ruby-playground"
 
-if [ "$1" = hello ]; then
+hello(){
   echo "*** $IMAGE_NAME"
-fi
+}
 
-if [ "$1" = build ]; then
-  echo "*** Building"
+build(){
+  echo "*** Building image $IMAGE_NAME"
   docker build -t $IMAGE_NAME .
-fi
+}
 
-if [ "$1" = run ]; then
+build_if_not_exists(){
   if [ "$(docker images -q $IMAGE_NAME 2> /dev/null)" = "" ]; then
-    echo "*** Image does not exists. So, building"
+    echo "*** Image does not exists"
+    build
   fi
+}
+
+run(){
   echo "*** Running"
   docker run -ti -p 4567:4567 -v $(pwd):/home/$USER/dev -e USER=$USER -e USERID=$UID $IMAGE_NAME bash
-fi
+}
 
-if [ "$1" = clean ]; then
+clean(){
+  echo "*** Cleaning image $IMAGE_NAME"
   docker rmi -f $IMAGE_NAME
+}
+
+destroy(){
+  echo "*** Destroy"
+  docker rm -f $(docker ps -aq)
+}
+
+if [ "$1" = "hello" ]; then
+  hello
 fi
 
-# if [ "$1" == destroy ]; then
-#   docker rm -f $(docker ps -aq)
-# fi
+if [ "$1" = "" ]; then
+  build
+fi
+
+if [ "$1" = "run" ]; then
+  build_if_not_exists
+  run
+fi
+
+if [ "$1" = "clean" ]; then
+  clean
+fi
+
+if [ "$1" = "destroy" ]; then
+  destroy
+fi
