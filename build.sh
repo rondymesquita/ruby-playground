@@ -18,37 +18,51 @@ build_if_not_exists(){
 }
 
 run(){
+  build_if_not_exists
   echo "*** Running"
   docker run -ti -p 4567:4567 -v $(pwd):/home/$USER/dev -e USER=$USER -e USERID=$UID $IMAGE_NAME bash
 }
 
 clean(){
-  echo "*** Cleaning image $IMAGE_NAME"
+  echo "*** Removing image $IMAGE_NAME"
   docker rmi -f $IMAGE_NAME
 }
 
 destroy(){
-  echo "*** Destroy"
-  docker rm -f $(docker ps -aq)
+  echo "*** This will remove all containers"
+  ask_for_confirmation
+  OPTION=$?
+  if [ "$OPTION" = 1 ]; then
+    docker rm -f $(docker ps -aq)
+  fi
 }
 
-if [ "$1" = "hello" ]; then
-  hello
-fi
+ask_for_confirmation(){
+  read -p "Continue (y/n)?" CHOICE
+  case "$CHOICE" in
+    y|Y ) OPTION=1;;
+    n|N ) OPTION=0;;
+    * ) echo "Invalid option!";;
+  esac
+
+  return $OPTION
+}
+
+say_something(){
+  return "yes"
+}
+
+for TASK in "$@"
+do
+ $TASK
+done
 
 if [ "$1" = "" ]; then
   build
 fi
 
-if [ "$1" = "run" ]; then
-  build_if_not_exists
-  run
-fi
-
-if [ "$1" = "clean" ]; then
-  clean
-fi
-
-if [ "$1" = "destroy" ]; then
-  destroy
+if [ "$1" = "ask" ]; then
+  ask_for_confirmation
+  OPTION=$?
+  echo "$OPTION"
 fi
