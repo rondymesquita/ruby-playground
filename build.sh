@@ -8,11 +8,24 @@ hello(){
   print "Hello"
 }
 
+help(){
+  print "Help"
+  echo "build"
+  echo "run"
+  echo "clean"
+  echo "destroy"
+}
+
 print(){
-  OUTPUT=$(printf "%-20s" $1)
-  OUTPUT2="$OUTPUT"
-  OUTPUT3="$OUTPUT2" | tr ' ' '-'
-  echo "** $OUTPUT2 **"
+  #Format filling with empty spaces
+  OUTPUT=$(printf "%-50s" $1"&")
+
+  #Replace empty spaces
+  OUTPUT="${OUTPUT// /*}"
+
+  #Workaroung to keep one empty space very after text
+  OUTPUT="${OUTPUT//&/ }"
+  echo "*** $OUTPUT"
 }
 
 build(){
