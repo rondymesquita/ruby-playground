@@ -3,3 +3,9 @@ AllCops:
 
 Metrics/AbcSize:
   Enabled: false
+
+# Style/Tab:
+#   Enabled: false
+#
+# Layout/Tab:
+#   Enabled: false

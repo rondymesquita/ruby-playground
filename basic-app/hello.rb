@@ -69,9 +69,37 @@ def recursive_example_one(count)
   recursive_example_one(count)
 end
 
+class Person
+    attr_accessor :id
+    def initialize(name)
+        @name = name
+    end
+
+    def say_name
+        puts @name
+    end
+end
+
+def grid
+    grid = []
+    for i in 0..5
+      line = []
+      for j in 0..5
+        line << Person.new("#{i} : #{j}")
+      end
+      grid << line
+    end
+
+    el = grid[1][7]
+    if !el.nil?
+        p el.say_name
+    end
+end
+
 # creating_objects
 # string_interpolation
 # repetitions
 # repetitions_of_objects
 # keep_talking
-recursive_example_one(5)
+# recursive_example_one(5)
+grid

@@ -1,90 +1,156 @@
 # frozen_string_literal: true
 
-class Position
-    attr_reader :row, :column
+class Cell
+    attr_accessor :row, :column, :grid, :content
+    attr_accessor :visited
 
-    def initialize(row, column)
+    def initialize(row, column, content)
         @row = row
         @column = column
+        @content = content
+        @visited = false
+    end
+
+    def check_neighbors(grid)
+        neighbors = Array.new
+        top = grid[@row - 1][@column]
+        right = grid[@row][@column + 1]
+        bottom = grid[@row + 1][@column]
+        left = grid[@row][@column - 1]
+
+        if !top.nil? && !top.visited && !top.wall?
+            return top if top.end?
+            neighbors << top
+        end
+
+        if !right.nil? && !right.visited && !right.wall?
+            return right if right.end?
+            neighbors << right
+        end
+
+        if !bottom.nil? && !bottom.visited && !bottom.wall?
+            return bottom if bottom.end?
+            neighbors << bottom
+        end
+
+        if !left.nil? && !left.visited && !left.wall?
+            return left if left.end?
+            neighbors << left
+        end
+
+        if neighbors.length > 0
+            random = Random.rand(0..neighbors.length-1)
+            n = neighbors[random]
+            return n
+        else
+
+            return nil
+        end
+    end
+
+    def fill
+        @content = "*"
+    end
+
+    def unfill
+        @content = " "
+    end
+
+    def wall?
+        return true if @content == '+' || @content == '-' || @content == '|'
+        return false
+    end
+
+    def start?
+        return true if @content == 'S'
+        return false
+    end
+
+    def end?
+        return true if @content == 'E'
+        return false
     end
 
 end
 
-LEFT = [0][-1]
-RIGHT = [0][1]
-UP = [-1][0]
-DOWN = [1][0]
-
 class Maze
-
-    @paths = []
+    @current = nil
 
     def initialize
-        file = File.read('map.txt')
+
+        # Represent the whole grid
+        @grid = Array.new
+
+        # Represent all the path passed by the 'pointer
+        @stack = Array.new
+
+        file = File.read('map2.txt')
         matrix = file.split("\n")
-        @map = []
-        matrix.each_with_index do |line, column|
+
+        matrix.each_with_index do |line, row|
             submap = []
-            line.split('').each_with_index do |point, row|
-                # pus "#{column+1} : #{row+1} : #{point}"
-                submap << point
+
+            line.split('').each_with_index do |content, column|
+                submap << Cell.new(row, column, content)
             end
-            @map << submap
+
+            @grid << submap
         end
     end
 
     def paint
-        @map.each do |line|
-            line .each do |point|
-                print point
+        @grid.each do |line|
+            line.each do |cell|
+                print cell.content
             end
             puts ''
+        end
+        puts "==================================="
+    end
+
+    def start
+        @grid.each do |line|
+            line.each do |cell|
+                if cell.start?
+                    @current = cell
+                    break
+                end
+            end
         end
     end
 
     def solve
-        walk("point", RIGHT)
-        @map.each do |line|
-            line .each do |point|
-                print point
-            end
-            puts ''
+        while !@current.end?
+            walk
+            sleep(0.03)
+            paint
         end
     end
 
-    def walk(point, direction)
-        return if end? point
-        return if wall? point
-        # resolve
-    end
+    def walk
+        @current.visited = true
+        @current.fill
 
-    def process_point
-        if wall? point
-            return
+        next_cell = @current.check_neighbors(@grid)
+
+        if next_cell != nil
+            next_cell.visited = true
+            @stack << @current
+            @current = next_cell
+        elsif @stack.length > 0
+            #dead-end
+            @grid[@current.row][@current.column].unfill
+            @current = @stack.pop
+
         end
     end
-
-    def wall?(point)
-        return true if point == '+' || point == '-'
-        return false
-    end
-
-    def start?(point)
-        return true if point == 'S'
-        return false
-    end
-
-    def end?(point)
-        return true if point == 'E'
-        return false
-    end
-
-    private :process_point
 
 end
 
 m = Maze.new
 m.paint
+
+m.start
 m.solve
-puts "solved"
+
 m.paint
