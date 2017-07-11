@@ -2,6 +2,8 @@
 IMAGE_NAME="ruby-playground"
 clear
 
+
+
 hello(){
   # echo "*** $IMAGE_NAME"
   print "$IMAGE_NAME"
@@ -9,16 +11,20 @@ hello(){
 }
 
 help(){
-  print "Help"
-  echo "build"
-  echo "run"
-  echo "clean"
-  echo "destroy"
+    RED=`tput setaf 1`
+    GREEN=`tput setaf 2`
+    YELLOW=`tput setaf 3`
+    WHITE=`tput setaf 7`
+    print "Help"
+    echo "${GREEN}build: ${YELLOW}Build the Dockerfile to a docker image"
+    echo "${GREEN}run: ${YELLOW}Run the docker image and enter on it. Build image if does not exist"
+    echo "${GREEN}clean: ${YELLOW}Delete the image"
+    echo "${GREEN}destroy: ${YELLOW}Delete all image and containers"
 }
 
 print(){
+    OUTPUT=$(printf "%-50s" $1"&")
   #Format filling with empty spaces
-  OUTPUT=$(printf "%-50s" $1"&")
 
   #Replace empty spaces
   OUTPUT="${OUTPUT// /*}"
@@ -57,6 +63,7 @@ destroy(){
   OPTION=$?
   if [ "$OPTION" = 1 ]; then
     docker rm -f $(docker ps -aq)
+    docker rmi -f $(docker images -aq)
   fi
 }
 
@@ -71,21 +78,13 @@ ask_for_confirmation(){
   return $OPTION
 }
 
-say_something(){
-  return "yes"
-}
-
+# Execute the tasks
 for TASK in "$@"
 do
  $TASK
 done
 
+# If nothing, build default
 if [ "$1" = "" ]; then
   build
-fi
-
-if [ "$1" = "ask" ]; then
-  ask_for_confirmation
-  OPTION=$?
-  echo "$OPTION"
 fi

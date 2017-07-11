@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Cell
-    attr_accessor :row, :column, :grid, :content
-    attr_accessor :visited
+    attr_accessor :row, :column, :grid, :content, :visited
 
     def initialize(row, column, content)
         @row = row
@@ -43,7 +42,6 @@ class Cell
             n = neighbors[random]
             return n
         else
-
             return nil
         end
     end
@@ -53,7 +51,7 @@ class Cell
     end
 
     def unfill
-        @content = " "
+        @content = " " if !wall? && !start? && !end?
     end
 
     def wall?
@@ -84,7 +82,7 @@ class Maze
         # Represent all the path passed by the 'pointer
         @stack = Array.new
 
-        file = File.read('map2.txt')
+        file = File.read('map.txt')
         matrix = file.split("\n")
 
         matrix.each_with_index do |line, row|
@@ -108,6 +106,25 @@ class Maze
         puts "==================================="
     end
 
+    def solve
+        start
+        while !@current.end?
+            walk
+            sleep(0.03)
+            paint
+        end
+
+        # print_solution
+        # walk_solution
+    end
+
+    def print_solution
+        @stack.each do |cell|
+            print "#{cell.row} : #{cell.column}\n"
+        end
+    end
+
+    private
     def start
         @grid.each do |line|
             line.each do |cell|
@@ -116,14 +133,6 @@ class Maze
                     break
                 end
             end
-        end
-    end
-
-    def solve
-        while !@current.end?
-            walk
-            sleep(0.03)
-            paint
         end
     end
 
@@ -145,12 +154,20 @@ class Maze
         end
     end
 
+    def walk_solution
+        @grid.each do |line|
+            line.each do |cell|
+                cell.unfill
+            end
+        end
+        @stack.each do |cell|
+            @grid[cell.row][cell.column].fill
+            sleep(0.03)
+            paint
+        end
+    end
+
 end
 
 m = Maze.new
-m.paint
-
-m.start
 m.solve
-
-m.paint
