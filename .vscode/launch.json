@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        // {
+		// 	"name": "Debug Local",
+		// 	"type": "Ruby",
+		// 	"request": "launch",
+		// 	"program": "${workspaceRoot}/basic-app/maze/solver.rb"
+		// }
+        {
+			"name": "Debug Local",
+			"type": "Ruby",
+			"request": "attach",
+			"program": "${workspaceRoot}/basic-app/maze/solver.rb"
+		}
+       
+    ]
+}
